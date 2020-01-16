@@ -1,6 +1,10 @@
 class TasksController < ApplicationController
+  before_action :require_user_logged_in
+  before_action :correct_user, only: [:destroy, :show, :edit]
+  
   def index
-    @task = Task.all
+    @task = current_user.tasks.order(id: :desc).page(params[:page])
+#    @task = Task.all
   end
 
   def show
@@ -8,19 +12,28 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = Task.new
+    @task = current_user.tasks.build  # form_with 用
   end
 
   def create
-    @task = Task.new(task_params)
-
+    @task = current_user.tasks.build(task_params)
     if @task.save
-      flash[:success] = 'Task が正常に作成されました'
-      redirect_to @task
+      flash[:success] = 'メッセージを投稿しました。'
+      redirect_to root_url
     else
-      flash.now[:danger] = 'Task が作成されませんでした'
+      @task = current_user.tasks.order(id: :desc).page(params[:page])
+      flash.now[:danger] = 'メッセージの投稿に失敗しました。'
       render :new
     end
+
+
+#    if @task.save
+#      flash[:success] = 'Task が正常に作成されました'
+#      redirect_to @task
+#    else
+#      flash.now[:danger] = 'Task が作成されませんでした'
+#      render :new
+#    end
   end
 
   def edit
@@ -52,6 +65,13 @@ class TasksController < ApplicationController
   # Strong Parameter
   def task_params
     params.require(:task).permit(:content, :status)
+  end
+  
+  def correct_user
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @task
+      redirect_to root_url
+    end
   end
 
 end
