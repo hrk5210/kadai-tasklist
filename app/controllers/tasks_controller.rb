@@ -4,11 +4,10 @@ class TasksController < ApplicationController
   
   def index
     @task = current_user.tasks.order(id: :desc).page(params[:page])
-#    @task = Task.all
   end
 
   def show
-    @task = Task.find(params[:id])
+#    @task = Task.find(params[:id])
   end
 
   def new
@@ -24,23 +23,14 @@ class TasksController < ApplicationController
       flash.now[:danger] = 'タスクが作成されませんでした。'
       render :new
     end
-
-
-#    if @task.save
-#      flash[:success] = 'Task が正常に作成されました'
-#      redirect_to @task
-#    else
-#      flash.now[:danger] = 'Task が作成されませんでした'
-#      render :new
-#    end
   end
 
   def edit
-    @task = Task.find(params[:id])
+#    @task = Task.find(params[:id])
   end
 
   def update
-    @task = Task.find(params[:id])
+#    @task = Task.find(params[:id])
 
     if @task.update(task_params)
       flash[:success] = 'Task は正常に更新されました'
@@ -52,7 +42,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task = Task.find(params[:id])
+#    @task = Task.find(params[:id])
     @task.destroy
 
     flash[:success] = 'Task は正常に削除されました'
